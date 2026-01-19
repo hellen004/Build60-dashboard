@@ -1,8 +1,11 @@
-export type MediaType = "IMAGE" | "VIDEO";
+export type UploadedMedia = {
+  url: string;
+  type: "IMAGE" | "VIDEO";
+};
 
 export type Media = {
   url: string;
-  type: MediaType;
+  type: UploadedMedia;
 };
 
 export type Project = {

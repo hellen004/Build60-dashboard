@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useProjectStore } from "../../store/useProjectStore";
 import { type Project } from "../../types/project";
-import { uploadToCloudinary } from "../../utils/cloudinaryUpload";
+import { uploadToCloudinary, type UploadedMedia } from "../../utils/cloudinaryUpload";
 
 export const UploadProjectForm = () => {
   const addProject = useProjectStore((s) => s.addProject);
@@ -41,7 +41,10 @@ export const UploadProjectForm = () => {
         technologies,
         skills: [],
         difficulty,
-        media: uploadedMedia,
+        media: uploadedMedia.map((item) => ({
+          type: item.type as unknown as UploadedMedia,
+          url: item.url,
+        })),
         createdAt: new Date().toISOString(),
       };
 

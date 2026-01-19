@@ -1,14 +1,13 @@
-import { UploadProjectForm } from "./components/projects/UploadProjectForm";
-import { Dashboard } from "./components/dashboard/Dashboard";
+import { Routes, Route } from "react-router-dom";
+import { DashboardPage } from "./pages/DashboardPage";
+import { ProjectDetailPage } from "./pages/ProjectDetailPage";
 
 function App() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-white p-6">
-      <div className="grid md:grid-cols-2 gap-6">
-        <UploadProjectForm />
-        <Dashboard />
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<DashboardPage />} />
+      <Route path="/project/:id" element={<ProjectDetailPage />} />
+    </Routes>
   );
 }
 

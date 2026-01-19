@@ -9,34 +9,32 @@ export const uploadToCloudinary = async (
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const preset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
-  if (!cloudName || !preset) {
-    throw new Error("Missing Cloudinary environment variables");
-  }
-
   const uploads = files.map(async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", preset);
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const isVideo = file.type.startsWith("video");
+
+    const endpoint = `https://api.cloudinary.com/v1_1/${cloudName}/${
+      isVideo ? "video" : "image"
+    }/upload`;
+
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) {
+      throw new Error("Cloudinary upload failed");
+    }
 
     const data = await res.json();
 
-    if (!res.ok) {
-      console.error("Cloudinary response:", data);
-      throw new Error(data.error?.message || "Cloudinary upload failed");
-    }
-
     return {
       url: data.secure_url,
-      type: file.type.startsWith("video") ? "VIDEO" : "IMAGE",
-    };
+      type: isVideo ? "VIDEO" : "IMAGE",
+    } as UploadedMedia;
   });
 
   return Promise.all(uploads);
